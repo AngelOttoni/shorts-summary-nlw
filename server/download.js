@@ -1,7 +1,7 @@
 import ytdl from "ytdl-core";
 import fs from "fs"; //file system
 
-export const download = (videoId) => {
+export const download = (videoId) => new Promise((resolve, reject) => {
   const videoURL = "http://www.youtube.com/shorts/" + videoId
   console.log("Downloading...", videoId);
 
@@ -16,9 +16,11 @@ export const download = (videoId) => {
         }
       }
     ).on("end",
-      (info) => {
+      () => {
         console.log("Download of the finished video.")
+        resolve()
       }).on("error", (error) => {
         console.log("It was not possible to download the video. More details:", error)
+        reject(error)
       }).pipe(fs.createWriteStream("./tmp/audio.mp4"));
-}
+})
